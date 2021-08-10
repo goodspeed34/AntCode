@@ -2,6 +2,7 @@ import os
 import re
 from libs.config import checkExt
 import json
+import pathlib
 from rich.table import Table
 from rich.console import Console
 class Audit(object):
@@ -13,15 +14,19 @@ class Audit(object):
         self.checkExt = checkExt.get(ctype)
         self.getFilefree(rootDir)
         self.LoadRule()
-    
+        #rootDir = pathlib.Path.cwd()
+        print(rootDir) 
     # 获取指定目录的所有文件
     def getFilefree(self,rootDir):
         fileSet = set()
         for dir_, _, files in os.walk(rootDir):
             for fileName in files:
                 relDir = os.path.relpath(dir_, rootDir)
-                relFile = os.path.join(relDir, fileName)
+                #print(relDir)
+                relFile = os.path.join(rootDir, fileName)
                 filePath = self.rootDir + "/" + relFile
+                #filePath = self.rootDir + "/"
+                print(filePath)
                 if filePath.split(".")[-1] not in self.checkExt:
                     continue
                 fileSet.add(relFile)
@@ -56,7 +61,7 @@ class Audit(object):
                                 
                                 
                                 
-                console.print(table)
+        console.print(table)
                                 
                                 
     def Scan(self):
