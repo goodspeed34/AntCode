@@ -57,7 +57,6 @@ class Audit(object):
                                 
                                 
     def Scan(self):
-        all_in_one_list = []
         console = Console()
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("文件路徑")
@@ -65,6 +64,5 @@ class Audit(object):
         table.add_column("描述")
         for filepath in self.fileSet:
             for vul in self.checkCode(filepath):
-                all_in_one_list.append(vul)
-        table.add_row(all_in_one_list[0], all_in_one_list[1], all_in_one_list[2])
+                table.add_row(vul[0], vul[1], vul[2])
         console.print(table)
