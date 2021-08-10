@@ -42,11 +42,7 @@ class Audit(object):
             print(f"[-] {self.ctype} not found!")
     # 调用对应的规则进行审计
     def checkCode(self,filePath):
-        console = Console()
-        table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("文件路徑")
-        table.add_column("行數")
-        table.add_column("描述")
+        summary = []
         lineNum = 0
         with open(filePath, 'r', encoding="utf8", errors='ignore') as file:
                 for line in file.readlines():
@@ -55,15 +51,20 @@ class Audit(object):
                             if len(re.findall(self.rule[pattern]['regText'],line)) != 0:
                                 #log = f"{filePath}:{lineNum} : {self.rule[pattern]['content']}"
                                 #print(log)
-                                table.add_row(filePath,str(lineNum),self.rule[pattern]['content'])
+                                summary.append(filePath,str(lineNum),self.rule[pattern]['content'])
                                 #print(self.rule[pattern]['content'])
-                                
-                                
-                                
-                                
-        console.print(table)
+       return summary
                                 
                                 
     def Scan(self):
+        all_in_one_list = []
+        console = Console()
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("文件路徑")
+        table.add_column("行數")
+        table.add_column("描述")
         for filepath in self.fileSet:
-            self.checkCode(filepath)
+            for vul in self.checkCode(filepath):
+                all_in_one_list.append(vul)
+        table.add_row(all_in_one_list[0], all_in_one_list[1], all_in_one_list[2])
+        console.print(table)
